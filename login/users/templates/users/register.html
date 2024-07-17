@@ -1,0 +1,60 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %} 
+    <div class="content-section">
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Join Today</legend>
+                {{ form.first_name|as_crispy_field }}
+                {{ form.last_name|as_crispy_field }}
+                {{ form.email|as_crispy_field }}
+                {{ form.facebook_link|as_crispy_field }}
+                {{ form.username|as_crispy_field }}
+                {{ form.password1|as_crispy_field }}
+                {{ form.password2|as_crispy_field }}
+                {{ form.role|as_crispy_field }}
+                {{ form.subjects|as_crispy_field }}
+            </fieldset>
+            
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Sign Up</button>
+            </div>
+        </form>
+        
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+            </small>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const roleRadios = document.querySelectorAll('input[name="role"]');
+            const subjectsField = document.getElementById('id_subjects');
+
+            function updateSubjectHelpText(roleValue) {
+                if (roleValue === 'tutor') {
+                    subjectsField.setAttribute('data-help-text', 'Please select all subject expertise that apply.');
+                    document.getElementById('id_subjects_label').innerText = 'Subject Expertise';
+                } else if (roleValue === 'tutee') {
+                    subjectsField.setAttribute('data-help-text', 'Please select all subjects you need help in.');
+                    document.getElementById('id_subjects_label').innerText = 'Subject Needs';
+                }
+            }
+
+            roleRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateSubjectHelpText(this.value);
+                });
+            });
+
+            // Initialize help text based on default checked value
+            const checkedRadio = document.querySelector('input[name="role"]:checked');
+            if (checkedRadio) {
+                updateSubjectHelpText(checkedRadio.value);
+            }
+        });
+    </script>
+{% endblock content %}

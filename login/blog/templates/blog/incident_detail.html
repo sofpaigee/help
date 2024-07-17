@@ -1,0 +1,27 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="content-section">
+    <h2>{{ incident.title }}</h2>
+    <p><strong>Description:</strong> {{ incident.description }}</p>
+    <p><strong>Tags:</strong> 
+      {% for tag in incident.tags.all %}
+        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+    <p><strong>Date Reported:</strong> {{ incident.date_reported }}</p>
+    <div>
+      <strong>Files:</strong>
+      {% for file in incident.files.all %}
+        <a href="{{ file.url }}">{{ file.name }}</a><br>
+      {% endfor %}
+    </div>
+  </div>
+  {% if object.author == user %}
+    <div>
+      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+      <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+    </div>
+  {% endif %}
+{% endblock content %}

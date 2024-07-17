@@ -1,0 +1,33 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>User's Reports</h1>
+    <div class="incident-list">
+        {% for incident in incidents %}
+            <div class="post-container">
+                <article class="media content-section">
+                    <div class="media-body">
+                        <div class="article-metadata">
+                            <a class="mr-2" href="{% url 'user-posts' incident.author.username %}">{{ incident.author }}</a>
+                            <small class="text-muted">{{ incident.date_reported|date:"F d, Y H:i:s" }}</small>
+                        </div>
+                        <h2><a class="article-title" href="{% url 'post-detail' incident.id %}">{{ incident.title }}</a></h2>
+                        <p class="article-content"><strong>Tags:</strong> 
+                            {% for tag in incident.tags.all %}
+                                {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        <p class="article-content">{{ incident.description }}</p>
+                        <div class="files-container">
+                            <strong>Files:</strong>
+                            {% for file in incident.files.all %}
+                                <a href="{{ file.file.url }}">{{ file.file.name }}</a><br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
